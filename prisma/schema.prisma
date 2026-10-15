@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  username     String   @unique
+  passwordHash String
+  role         String   @default("STAFF")
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+model Supplier {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  phone     String?
+  address   String?
+  createdAt DateTime  @default(now())
+  products  Product[]
+  purchases Purchase[]
+}
+
+model Product {
+  id             Int              @id @default(autoincrement())
+  code           String           @unique
+  name           String
+  category       String
+  unit           String
+  purchasePrice  Float            @default(0)
+  generalPrice   Float            @default(0)
+  partnerPrice   Float            @default(0)
+  initialStock   Int              @default(0)
+  stock          Int              @default(0)
+  minimumStock   Int              @default(0)
+  supplierId     Int?
+  active         Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  supplier       Supplier?        @relation(fields: [supplierId], references: [id])
+  purchaseItems  PurchaseItem[]
+  saleItems      SaleItem[]
+  adjustments    StockAdjustment[]
+}
+
+model Purchase {
+  id          Int            @id @default(autoincrement())
+  invoiceNo   String         @unique
+  date        DateTime       @default(now())
+  method      String
+  supplierId  Int?
+  total       Float          @default(0)
+  notes       String?
+  createdAt   DateTime       @default(now())
+  supplier    Supplier?      @relation(fields: [supplierId], references: [id])
+  items       PurchaseItem[]
+}
+
+model PurchaseItem {
+  id          Int      @id @default(autoincrement())
+  purchaseId  Int
+  productId   Int
+  quantity    Int
+  unitPrice   Float
+  subtotal    Float
+  purchase    Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+}
+
+model Sale {
+  id             Int           @id @default(autoincrement())
+  invoiceNo      String        @unique
+  date           DateTime      @default(now())
+  buyerType      String
+  paymentMethod  String
+  total          Float         @default(0)
+  paid           Float         @default(0)
+  change         Float         @default(0)
+  createdAt      DateTime      @default(now())
+  items          SaleItem[]
+}
+
+model SaleItem {
+  id          Int      @id @default(autoincrement())
+  saleId      Int
+  productId   Int
+  quantity    Int
+  unitPrice   Float
+  costPrice   Float
+  subtotal    Float
+  profit      Float
+  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+}
+
+model StockAdjustment {
+  id          Int            @id @default(autoincrement())
+  productId   Int
+  type        String
+  quantity    Int
+  note        String?
+  date        DateTime       @default(now())
+  product     Product        @relation(fields: [productId], references: [id])
+}
+
+model ShuSetting {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  percentage  Float
+  description String?
+  updatedAt   DateTime @updatedAt
+}

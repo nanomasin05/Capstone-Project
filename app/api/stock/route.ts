@@ -1,0 +1,5 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { requireUser } from '@/lib/auth';
+export async function POST(req:Request){try{await requireUser();const b=await req.json();const qty=Math.abs(Number(b.quantity));const type=b.type;const delta=(type==='CORRECTION_IN'?qty:-qty);if(type==='DAMAGED'||type==='LOST'){const p=await prisma.product.findUnique({where:{id:Number(b.productId)}});if(!p||p.stock<qty)return NextResponse.json({message:'Stok tidak cukup untuk penyesuaian.'},{status:400});}const r=await prisma.$transaction(async tx=>{const a=await tx.stockAdjustment.create({data:{productId:Number(b.productId),type,quantity:qty,note:b.note||null}});await tx.product.update({where:{id:Number(b.productId)},data:{stock:{increment:delta}}});return a});return NextResponse.json(r,{status:201});}catch{return NextResponse.json({message:'Gagal melakukan penyesuaian stok.'},{status:400});}}
+export async function GET(){try{await requireUser();return NextResponse.json(await prisma.stockAdjustment.findMany({include:{product:true},orderBy:{date:'desc'}}));}catch{return NextResponse.json({message:'Unauthorized'},{status:401});}}
