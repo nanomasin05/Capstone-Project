@@ -1,0 +1,6 @@
+0000000000000000000000000000000000000000 928d9e75d01bf9cec07a2748329029683d326359 Syafaat <syafaaalfaridzi28@gmail.com> 1790499978 +0900	commit (initial): Initial commit UT Shop Management
+928d9e75d01bf9cec07a2748329029683d326359 0000000000000000000000000000000000000000 Syafaat <syafaaalfaridzi28@gmail.com> 1790505248 +0900	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 928d9e75d01bf9cec07a2748329029683d326359 Syafaat <syafaaalfaridzi28@gmail.com> 1790505248 +0900	Branch: renamed refs/heads/master to refs/heads/main
+928d9e75d01bf9cec07a2748329029683d326359 0000000000000000000000000000000000000000 Syafaat <syafaaalfaridzi28@gmail.com> 1790505544 +0900	Branch: renamed refs/heads/main to refs/heads/main
+928d9e75d01bf9cec07a2748329029683d326359 928d9e75d01bf9cec07a2748329029683d326359 Syafaat <syafaaalfaridzi28@gmail.com> 1790505544 +0900	Branch: renamed refs/heads/main to refs/heads/main
+928d9e75d01bf9cec07a2748329029683d326359 754527258bbe21ca5b1feecb291806bca937c793 Syafaat <syafaaalfaridzi28@gmail.com> 1790508301 +0900	commit: Update database provider to PostgreSQL
